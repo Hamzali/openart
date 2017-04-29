@@ -8,7 +8,7 @@ const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 
 // database connection.
-mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB);
+mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB_URI);
 mongoose.connection.on('error', (err) => {
   console.log('MongoDB Connection Error: ' + err);
   process.exit(1);
