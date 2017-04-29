@@ -1,6 +1,8 @@
 require('dotenv').config();
+const path = require('path');
 
-const app = require('express')();
+const express = require('express');
+const app = express();
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
@@ -17,6 +19,7 @@ mongoose.connection.on('error', (err) => {
 app.engine('pug', require('pug').__express);
 app.set('view engine', 'pug');
 app.set('views', './views');
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 // middlewares
