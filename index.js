@@ -6,8 +6,11 @@ const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 
 // database connection.
-mongoose.connect('mongodb://' + process.env.DB_HOST);
-
+mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connection.on('error', (err) => {
+  console.log('MongoDB Connection Error: ' + err);
+  process.exit(1);
+});
 
 
 // Template and engine integration.
