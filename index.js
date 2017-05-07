@@ -41,7 +41,10 @@ app.use(
     })
  );
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'dev') {
+    app.use(morgan('dev'));
+}
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
@@ -67,7 +70,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(process.env.PORT, () => {
-    console.log('App listening on PORT:' + process.env.PORT);
+    if (process.env.NODE_ENV === 'dev') console.log('App listening on PORT:' + process.env.PORT);
 });
 
 module.exports = { app: app, Art: Art.Art, Artist: Artist.Artist };

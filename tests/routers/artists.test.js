@@ -1,9 +1,8 @@
-let server = require('../../index.js');
-let app = server.app;
-let Artist = server.Artist;
+const server = require('../../index.js');
+const app = server.app;
+const Artist = server.Artist;
 
-
-describe('Artists', function () {
+describe('Artists Routers', function () {
     let artistId;
 
     Artist.collection.drop();
@@ -58,3 +57,4 @@ describe('Artists', function () {
 
 
 });
+

@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "export NODE_ENV=test && mocha -r ./tests/test-helper -R spec tests/**/*.test.js",
-    "start": "node index.js",
+    "start": "node NODE_ENV=prod index.js",
     "dev": "export NODE_ENV=dev && nodemon index.js"
   },
   "author": "hamzali",
@@ -25,6 +25,7 @@
     "chai": "^3.2.0",
     "chai-http": "^1.0.0",
     "mocha": "^3.3.0",
+    "mockgoose": "^7.3.1",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "supertest": "^3.0.0"

@@ -1,8 +1,6 @@
-let server = require('../../index.js');
-let app = server.app;
-let Art = server.Art;
-
-
+const server = require('../../index.js');
+const app = server.app;
+const Art = server.Art;
 
 describe('Arts Routers', function () {
     
@@ -148,3 +146,4 @@ describe('Arts Routers', function () {
         });
     });
 });
+

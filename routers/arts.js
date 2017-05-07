@@ -71,8 +71,7 @@ module.exports = (art) => {
 
     router.put('/:id', (req, res) => {
         art.update(req.params.id)
-        .then((data) => {
-            console.log(data);
+        .then(() => {
             res.send({ message: 'SUCCESS' });
         })
         .catch((err) => {

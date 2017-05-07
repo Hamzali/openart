@@ -20,7 +20,8 @@
     "no-console": 0
   },
   "globals": {
-    "chai": true
+    "chai": true,
+    "server": true
   }
 }
 
