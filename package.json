@@ -5,10 +5,10 @@
   "description": "open source art api",
   "main": "index.js",
   "scripts": {
-    "test": "export NODE_ENV=test && mocha -r ./src/tests/test-helper -R spec src/tests/**/*.test.js",
+    "test": "export NODE_ENV=test && mocha -r ./tests/test-helper -R spec tests/**/*.test.js",
     "start": "node NODE_ENV=prod index.js",
     "predev": "mkdir data && mongod --dbpath data --fork --logpath /dev/null",
-    "dev": "export NODE_ENV=dev && nodemon src/index.js",
+    "dev": "export NODE_ENV=dev && nodemon index.js",
     "postdev": "mongo admin --eval 'db.shutdownServer()' > /dev/null && rm -r data",
     "start-db": "mkdir data && mongod --dbpath data --fork --logpath /dev/null",
     "stop-db": "mongo admin --eval 'db.shutdownServer()' > /dev/null && rm -r data"
