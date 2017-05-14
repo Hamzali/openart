@@ -10,4 +10,3 @@ global.expect = chai.expect;
 global.sinon = sinon;
 global.should = chai.should();
 global.chai = chai;
-

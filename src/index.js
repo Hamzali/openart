@@ -51,17 +51,23 @@ app.use((err, req, res, next) => {
     next();
 });
 
+app.set('secret', 'secretissecretok');
+
 // App routes.
 app.get('/', (req, res) => {
     res.render('index');
 });
 
+// Initialize models with ORM.
 let Art = require('./models/arts')(mongoose);
 let Artist = require('./models/artists')(mongoose);
 
+// Initialize routers with relative models.
 let arts = require('./routers/arts')(Art);
 let artists = require('./routers/artists')(Artist);
+let auth = require('./routers/auth')(Artist, app.get('secret'));
 
+app.use('/auth', auth);
 app.use('/api/arts', arts);
 app.use('/api/artists', artists);
 

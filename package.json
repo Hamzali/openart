@@ -5,29 +5,32 @@
   "description": "open source art api",
   "main": "index.js",
   "scripts": {
-    "test": "export NODE_ENV=test && mocha -r ./tests/test-helper -R spec tests/**/*.test.js",
+    "test": "export NODE_ENV=test && mocha -r ./src/tests/test-helper -R spec src/tests/**/*.test.js",
     "start": "node NODE_ENV=prod index.js",
-    "dev": "export NODE_ENV=dev && nodemon index.js"
+    "predev": "mkdir data && mongod --dbpath data --fork --logpath /dev/null",
+    "dev": "export NODE_ENV=dev && nodemon src/index.js",
+    "postdev": "mongo admin --eval 'db.shutdownServer()' > /dev/null && rm -r data",
+    "start-db": "mkdir data && mongod --dbpath data --fork --logpath /dev/null",
+    "stop-db": "mongo admin --eval 'db.shutdownServer()' > /dev/null && rm -r data"
   },
   "author": "hamzali",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.1",
-    "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "express-validator": "^3.2.0",
+    "jsonwebtoken": "^7.4.0",
     "mongoose": "^4.9.6",
     "morgan": "^1.8.1",
-    "nodemon": "^1.11.0",
     "pug": "^2.0.0-beta.12"
   },
   "devDependencies": {
     "chai": "^3.2.0",
     "chai-http": "^1.0.0",
+    "dotenv": "^4.0.0",
     "mocha": "^3.3.0",
-    "mockgoose": "^7.3.1",
+    "nodemon": "^1.11.0",
     "sinon": "^2.1.0",
-    "sinon-chai": "^2.9.0",
-    "supertest": "^3.0.0"
+    "sinon-chai": "^2.9.0"
   }
 }

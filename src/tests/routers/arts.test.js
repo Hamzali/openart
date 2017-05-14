@@ -4,8 +4,6 @@ const Art = server.Art;
 
 describe('Arts Routers', function () {
     
-    Art.collection.drop();
-    
     let artId;
 
     beforeEach(function (done) {
@@ -13,11 +11,15 @@ describe('Arts Routers', function () {
             title: 'arty party',
             description: 'this is the description of the art',
             content: 'content should be image but for now it is just a text',
-            createdAt: Date.now()
+            createdAt: Number(Date.now())
         });
-        newArt.save(function (err, data) {
-            if (err) console.log(err);
+
+        newArt.save()
+        .then(data => {
             artId = data.id;
+            done();
+        }).catch(err => {
+            console.log(err);
             done();
         });
     });
@@ -36,9 +38,7 @@ describe('Arts Routers', function () {
                 res.body.should.be.an('array');
                 done();
             });
-    });
-
-    
+    });   
 
     it('should add a SINGLE art on /api/arts POST', function (done) {
         chai.request(app)

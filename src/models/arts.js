@@ -1,7 +1,7 @@
 
 module.exports = (mongoose) => {
     const Schema = mongoose.Schema;
-
+    
     const artSchema = new Schema({
         title: String,
         content: String,
@@ -21,17 +21,16 @@ module.exports = (mongoose) => {
 
     const create = (params) => {
         params.createdAt = Number(Date.now());
-        console.log(typeof params.createdAt);
 
         return (new Art(params)).save();
     };
 
     const remove = (id) => {
-        return Art.findByIdAndRemove(id);
+        return Art.findByIdAndRemove(id).exec();
     };
 
-    const update = (id, update) => {
-        return Art.update({ id: id }, update ).exec();   
+    const update = (id, params) => {
+        return Art.findByIdAndUpdate(id, params).exec();
     };
 
     return {
