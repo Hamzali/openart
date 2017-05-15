@@ -26,3 +26,4 @@ coverage
 benchmarks/graphs
 
 .env
+data

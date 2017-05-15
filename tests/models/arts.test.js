@@ -1,8 +1,0 @@
-
-
-describe('Arts Models', function () {
-    
-});
-    
-
-    

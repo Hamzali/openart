@@ -21,7 +21,10 @@
   },
   "globals": {
     "chai": true,
-    "server": true
+    "server": true,
+    "app": true,
+    "Art": true,
+    "Artist": true
   }
 }
 

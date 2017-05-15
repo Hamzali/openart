@@ -1,24 +1,29 @@
-const server = require('../../index.js');
-const app = server.app;
-const Artist = server.Artist;
+const bcrypt = require('bcrypt');
 
 describe('JWT Auth', function () {
-
     beforeEach(function (done) {
-        (new Artist({
+        
+        bcrypt
+        .hash('gizli', 10)
+        .then((hash) => {
+
+            let newArtist = new Artist({
             name: 'artiz',
             nickname: 'artizneararlabazarda',
             email: 'artiz@arar.com',
-            password: 'gizli',
+            password: hash,
             createdAt: Number(Date.now())
-        })).save()
-        .then(d => {
+            });
 
-            done();
-        }).catch(err => {
-            console.log(err);
-            done();
+            newArtist.save()
+            .then(data => {
+                done();
+            }).catch(err => {
+                console.log(err);
+                done();
+            });
         });
+        
     });
 
     afterEach(function (done) {

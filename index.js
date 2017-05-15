@@ -7,7 +7,8 @@ const express = require('express'),
     bodyparser = require('body-parser'),
     mongoose = require('mongoose'),
     expressValidator = require('express-validator');
-    
+
+// TODO: Create a seperate config file and tidy up index.
 // database connection.
 // MONGODB_URI=mongodb://root:root@ds123371.mlab.com:23371/heroku_g8dv2h6c
 mongoose.Promise = global.Promise;
@@ -21,8 +22,8 @@ mongoose.connection.on('error', (err) => {
 // Template and engine integration.
 app.engine('pug', require('pug').__express);
 app.set('view engine', 'pug');
-app.set('views', './views');
-app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', './src/views');
+app.use(express.static(path.join(__dirname, 'src/public')));
 
 
 // middlewares
@@ -59,13 +60,13 @@ app.get('/', (req, res) => {
 });
 
 // Initialize models with ORM.
-let Art = require('./models/arts')(mongoose);
-let Artist = require('./models/artists')(mongoose);
+let Art = require('./src/models/arts')(mongoose);
+let Artist = require('./src/models/artists')(mongoose);
 
 // Initialize routers with relative models.
-let arts = require('./routers/arts')(Art);
-let artists = require('./routers/artists')(Artist);
-let auth = require('./routers/auth')(Artist, app.get('secret'));
+let arts = require('./src/routers/arts')(Art);
+let artists = require('./src/routers/artists')(Artist);
+let auth = require('./src/routers/auth')(Artist, app.get('secret'));
 
 app.use('/auth', auth);
 app.use('/api/arts', arts);
@@ -79,4 +80,8 @@ app.listen(process.env.PORT, () => {
     if (process.env.NODE_ENV === 'dev') console.log('App listening on PORT:' + process.env.PORT);
 });
 
-module.exports = { app: app, Art: Art.Art, Artist: Artist.Artist };
+module.exports = { 
+    app: app, 
+    Art: Art.Art, 
+    Artist: Artist.Artist 
+};

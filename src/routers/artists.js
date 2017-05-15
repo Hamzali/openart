@@ -1,4 +1,5 @@
 const Router = require('express').Router;
+const auth = require('../middlewares/auth');
 
 module.exports = (Artist) => {
     const router = new Router();
@@ -51,15 +52,21 @@ module.exports = (Artist) => {
             };
 
             Artist.create(params)
-            .then(data => {      
+            .then(data => {     
                 res.send({
                     'message': 'success, new artist created.',
                     'id': data.id
                 });
             })
             .catch((err) => {
-                console.log(err);
-                res.status(400).send({ 'message': 'Could not be able to save the data.' });
+                
+                if (err.name === 'ValidationError') {
+                    const error = err.errors.nickname || err.errors.email;
+                    res.status(400).send({ 'message': 'fail, ' + (error.message) });
+                } else {
+                    res.status(400).send({ 'message': 'Could not be able to save the data.' });
+                }
+                
             });
 
         });
@@ -67,7 +74,9 @@ module.exports = (Artist) => {
 
     });
 
+    router.put('/:id', auth);
     router.put('/:id', (req, res) => {
+        
 
         req.checkBody('name', 'Invalid name').optional().notEmpty().isString();
         req.checkBody('nickname', 'Invalid nickname').optional().notEmpty().isString();
@@ -106,8 +115,9 @@ module.exports = (Artist) => {
         });
     });
 
-
+    router.delete('/:id', auth);
     router.delete('/:id', (req, res) => {
+
         Artist.remove(req.params.id)
         .then(() => {
             res.send({ 'message': 'success' });

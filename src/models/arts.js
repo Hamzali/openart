@@ -1,4 +1,3 @@
-
 module.exports = (mongoose) => {
     const Schema = mongoose.Schema;
     

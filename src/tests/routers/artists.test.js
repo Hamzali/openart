@@ -1,27 +1,37 @@
-const server = require('../../index.js');
-const app = server.app;
-const Artist = server.Artist;
+const bcrypt = require('bcrypt'), 
+jwt = require('jsonwebtoken');
+
 
 describe('Artists Routers', function () {
-    let artistId;
+    let token, artistId;
 
     beforeEach(function (done) {
-        let newArtist = new Artist({
+        
+        bcrypt
+        .hash('gizli', 10)
+        .then((hash) => {
+
+            let newArtist = new Artist({
             name: 'artiz',
             nickname: 'artizneararlabazarda',
             email: 'artiz@arar.com',
-            password: 'gizli',
+            password: hash,
             createdAt: Number(Date.now())
-        });
+            });
 
-        newArtist.save()
-        .then(data => {
-            artistId = data.id;
-            done();
-        }).catch(err => {
-            console.log(err);
-            done();
+            newArtist.save()
+            .then(data => {
+                artistId = data.id;
+                delete data.password;
+
+                token = jwt.sign(data, 'secret');
+                done();
+            }).catch(err => {
+                console.log(err);
+                done();
+            });
         });
+        
     });
 
     afterEach(function (done) {
@@ -146,11 +156,58 @@ describe('Artists Routers', function () {
         });
     });
 
+
+    it('POST api/artists should not save same email', function (done) {
+        chai.request(app)
+        .post('/api/artists')
+        .send({
+            'name': 'mamut kollariyandan',
+            'nickname': 'yandankollu',
+            'email': 'artiz@arar.com',
+            'password': 'gizlimamut'
+        })
+        .end(function (error, res) { 
+            res.should.have.status(400);
+            res.should.be.json;
+
+            res.body.should.be.an('object');
+            res.body.should.have.property('message');
+            res.body.message.should.be.a('string');
+            res.body.message.should.equal('fail, email already exists');
+
+            done();
+        });
+    });
+
+
+    it('POST api/artists should not save same nickname', function (done) {
+        chai.request(app)
+        .post('/api/artists')
+        .send({
+            'name': 'mamut kollariyandan',
+            'nickname': 'artizneararlabazarda',
+            'email': 'baba@ana.com',
+            'password': 'gizlimamut'
+        })
+        .end(function (error, res) { 
+            res.should.have.status(400);
+            res.should.be.json;
+
+            res.body.should.be.an('object');
+            res.body.should.have.property('message');
+            res.body.message.should.be.a('string');
+            res.body.message.should.equal('fail, nickname already exists');
+            
+            done();
+        });
+    });
+
     it('PUT api/artists/:id should update with the given info', function (done) {
         const newData = {
             'name': 'new name',
             'nickname': 'newnick',
-            'email': 'new@email.com'
+            'email': 'new@email.com',
+            token: token
         };
 
         chai.request(app)
@@ -186,7 +243,8 @@ describe('Artists Routers', function () {
 
     it('PUT api/artists/:id should update only the given info', function (done) {
         const newData = {
-            'nickname': 'newnick'
+            'nickname': 'newnick',
+            token: token
         };
 
         chai.request(app)
@@ -223,7 +281,8 @@ describe('Artists Routers', function () {
 
      it('PUT api/artists/:id should not update with empty or invalid body', function (done) {
         const newData = {
-            'test': 'test it bitch'
+            'test': 'test it bitch',
+            token: token
         };
 
         chai.request(app)
@@ -245,6 +304,7 @@ describe('Artists Routers', function () {
     it('DELETE api/artists/:id should delete an artists with given id', function (done) {
         chai.request(app)
         .delete('/api/artists/' + artistId)
+        .set({ 'x-access-token': token })
         .end(function (error, res) {
             res.should.have.status(200);
             res.should.be.json;

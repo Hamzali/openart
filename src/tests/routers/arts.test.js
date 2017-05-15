@@ -1,7 +1,3 @@
-const server = require('../../index.js');
-const app = server.app;
-const Art = server.Art;
-
 describe('Arts Routers', function () {
     
     let artId;
