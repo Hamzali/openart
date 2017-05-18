@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 
-module.exports = function (mongoose) {
+module.exports = app => {
+
+    const mongoose = app.mongoose;
     const Schema = mongoose.Schema;
     
     // Validate email and nickname. 
@@ -66,20 +68,20 @@ module.exports = function (mongoose) {
 
     
     const Artist = mongoose.model('Artist', artistSchema);
-
-    const findArtists = query => {
+    
+    this.findArtists = query => {
         return Artist.find(query).lean().exec();
     };
 
-    const findById = id => {
+    this.findById = id => {
         return Artist.findById(id).lean().exec();
     };
 
-    const findByEmail = email => {
+    this.findByEmail = email => {
         return Artist.findOne({ 'email': email }).lean().exec();
     };
 
-    const create = params => {
+    this.create = params => {
         params.createdAt = Number(Date.now());
 
         // salt round 10
@@ -91,21 +93,14 @@ module.exports = function (mongoose) {
         });
     };
 
-    const update = (id, params) => {
+    this.update = (id, params) => {
         return Artist.findByIdAndUpdate(id, params).exec();
     };
 
-    const remove = id => {
+    this.remove = id => {
         return Artist.findByIdAndRemove(id).exec();
     };
 
-    return {
-        Artist: Artist,
-        findArtists: findArtists,
-        findById: findById,
-        findByEmail: findByEmail, 
-        create: create,
-        update: update,
-        remove: remove
-    };
+    this.model = Artist;
+    return this;
 };

@@ -1,13 +1,22 @@
 const Router = require('express').Router;
-const auth = require('../middlewares/auth');
 
-module.exports = (Artist) => {
+module.exports = app => {
     const router = new Router();
+    
+    const Artist = app.models.artist;
+    const auth = app.middlewares.auth;
 
     router.get('/', (req, res) => {
         Artist.findArtists()
         .then((data) => {
-            res.json(data);
+            // map the data in order to delete sensitive data
+            res.json(data.map((d) => {
+                
+                delete d.password;
+                delete d.email;
+
+                return d;
+            }));
         })
         .catch((err) => {
             console.log(err);
@@ -20,6 +29,9 @@ module.exports = (Artist) => {
         Artist.findById(req.params.id)
         .then(data => {
             if (!data) throw new Error('No data found!');
+
+            delete data.password;
+
             res.json(data);
         })
         .catch(err => {
@@ -128,5 +140,9 @@ module.exports = (Artist) => {
         });
     });
 
-    return router;
+
+    // set the app endpoint.
+    app.use('/api/artist', router);
+    
+    return this;
 };

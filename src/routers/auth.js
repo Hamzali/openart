@@ -2,8 +2,9 @@ const Router = require('express').Router,
  jwt    = require('jsonwebtoken'),
  bcrypt = require('bcrypt');
 
-module.exports =  (Artist, secret) => {
+module.exports =  app => {
 
+    const Artist = app.models.artist;
     const router = new Router();
 
     router.post('/', (req, res) => {
@@ -38,7 +39,7 @@ module.exports =  (Artist, secret) => {
                         delete data.password;
 
                         // Create the token.
-                        const token = jwt.sign(data, secret); // TODO: add expire date.
+                        const token = jwt.sign(data, 'secret'); // TODO: add expire date.
                         
                         // Send to the user.
                         res.send({ 
@@ -54,9 +55,6 @@ module.exports =  (Artist, secret) => {
                     }
                 });
                 
-
-                
-                
             })
             .catch(err => {
                 console.log(err);
@@ -69,5 +67,6 @@ module.exports =  (Artist, secret) => {
         
     });
 
+    app.use('/auth', router);
     return router;
 };

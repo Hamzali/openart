@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt'),
 jwt = require('jsonwebtoken');
 
 
-describe('Artists Routers', function () {
+describe('Artist', function () {
     let token, artistId;
 
     beforeEach(function (done) {
@@ -39,10 +39,10 @@ describe('Artists Routers', function () {
         done();
     });
 
-    it('GET api/artists should return all artists', function (done) {
+    it('GET api/artist should return all artists', function (done) {
         
         chai.request(app)
-        .get('/api/artists')
+        .get('/api/artist')
         .end(function (error, res) {
            res.should.have.status(200);
            res.should.be.json;
@@ -54,10 +54,6 @@ describe('Artists Routers', function () {
            res.body[0].name.should.be.a('string');
            res.body[0].should.have.property('nickname');
            res.body[0].nickname.should.be.a('string');
-           res.body[0].should.have.property('email');
-           res.body[0].email.should.be.a('string');
-           res.body[0].should.have.property('password');
-           res.body[0].password.should.be.a('string');
            res.body[0].should.have.property('createdAt');
            res.body[0].createdAt.should.be.a('string');
            
@@ -66,9 +62,9 @@ describe('Artists Routers', function () {
          
     });
 
-    it('GET api/artists/:id should return a artist', function (done) {
+    it('GET api/artist/:id should return a artist', function (done) {
         chai.request(app)
-        .get('/api/artists/' + artistId)
+        .get('/api/artist/' + artistId)
         .end(function (error, res) {
             res.should.have.status(200);
             res.should.be.json;
@@ -80,8 +76,6 @@ describe('Artists Routers', function () {
             res.body.nickname.should.be.a('string');
             res.body.should.have.property('email');
             res.body.email.should.be.a('string');
-            res.body.should.have.property('password');
-            res.body.password.should.be.a('string');
             res.body.should.have.property('createdAt');
             res.body.createdAt.should.be.a('string');
 
@@ -91,9 +85,9 @@ describe('Artists Routers', function () {
     });
 
 
-    it('GET api/artists/:id should fail if id is not found', function (done) {
+    it('GET api/artist/:id should fail if id is not found', function (done) {
         chai.request(app)
-        .get('/api/artists/thisisnoid')
+        .get('/api/artist/thisisnoid')
         .end(function (error, res) { 
             res.should.have.status(400);
             res.should.be.json;
@@ -107,9 +101,9 @@ describe('Artists Routers', function () {
         });
     });
 
-    it('POST api/artists should create SINGLE artist', function (done) {
+    it('POST api/artist should create SINGLE artist', function (done) {
         chai.request(app)
-        .post('/api/artists')
+        .post('/api/artist')
         .send({
             'name': 'mamut kollariyandan',
             'nickname': 'yandankollu',
@@ -132,9 +126,9 @@ describe('Artists Routers', function () {
         });
     });
 
-    it('POST api/artists should give invalid error', function (done) {
+    it('POST api/artist should give invalid error', function (done) {
         chai.request(app)
-        .post('/api/artists')
+        .post('/api/artist')
         .send({
             'name': 'mamut kollariyandan',
             'nickname': 'yandankollu',
@@ -157,9 +151,9 @@ describe('Artists Routers', function () {
     });
 
 
-    it('POST api/artists should not save same email', function (done) {
+    it('POST api/artist should not save same email', function (done) {
         chai.request(app)
-        .post('/api/artists')
+        .post('/api/artist')
         .send({
             'name': 'mamut kollariyandan',
             'nickname': 'yandankollu',
@@ -180,9 +174,9 @@ describe('Artists Routers', function () {
     });
 
 
-    it('POST api/artists should not save same nickname', function (done) {
+    it('POST api/artist should not save same nickname', function (done) {
         chai.request(app)
-        .post('/api/artists')
+        .post('/api/artist')
         .send({
             'name': 'mamut kollariyandan',
             'nickname': 'artizneararlabazarda',
@@ -202,7 +196,7 @@ describe('Artists Routers', function () {
         });
     });
 
-    it('PUT api/artists/:id should update with the given info', function (done) {
+    it('PUT api/artist/:id should update with the given info', function (done) {
         const newData = {
             'name': 'new name',
             'nickname': 'newnick',
@@ -211,7 +205,7 @@ describe('Artists Routers', function () {
         };
 
         chai.request(app)
-        .put('/api/artists/' + artistId)
+        .put('/api/artist/' + artistId)
         .send(newData)
         .end(function (error, res) {
             res.should.have.status(200);
@@ -224,7 +218,7 @@ describe('Artists Routers', function () {
 
             // Check if it is updated as we wanted.
             chai.request(app)
-            .get('/api/artists/' + artistId)
+            .get('/api/artist/' + artistId)
             .end(function (error, res) {
                 res.should.have.status(200);
                 res.should.be.json;
@@ -241,14 +235,14 @@ describe('Artists Routers', function () {
         });
     });
 
-    it('PUT api/artists/:id should update only the given info', function (done) {
+    it('PUT api/artist/:id should update only the given info', function (done) {
         const newData = {
             'nickname': 'newnick',
             token: token
         };
 
         chai.request(app)
-        .put('/api/artists/' + artistId)
+        .put('/api/artist/' + artistId)
         .send(newData)
         .end(function (error, res) {
             res.should.have.status(200);
@@ -261,7 +255,7 @@ describe('Artists Routers', function () {
 
             // Check if it is updated as we wanted.
             chai.request(app)
-            .get('/api/artists/' + artistId)
+            .get('/api/artist/' + artistId)
             .end(function (error, res) {
                 res.should.have.status(200);
                 res.should.be.json;
@@ -279,14 +273,14 @@ describe('Artists Routers', function () {
         });
     });
 
-     it('PUT api/artists/:id should not update with empty or invalid body', function (done) {
+     it('PUT api/artist/:id should not update with empty or invalid body', function (done) {
         const newData = {
             'test': 'test it bitch',
             token: token
         };
 
         chai.request(app)
-        .put('/api/artists/' + artistId)
+        .put('/api/artist/' + artistId)
         .send(newData)
         .end(function (error, res) {
             res.should.have.status(400);
@@ -301,9 +295,9 @@ describe('Artists Routers', function () {
     });
 
 
-    it('DELETE api/artists/:id should delete an artists with given id', function (done) {
+    it('DELETE api/artist/:id should delete an artists with given id', function (done) {
         chai.request(app)
-        .delete('/api/artists/' + artistId)
+        .delete('/api/artist/' + artistId)
         .set({ 'x-access-token': token })
         .end(function (error, res) {
             res.should.have.status(200);
@@ -315,7 +309,7 @@ describe('Artists Routers', function () {
             res.body.message.should.equal('success');
 
             chai.request(app)
-            .get('/api/artists/' + artistId)
+            .get('/api/artist/' + artistId)
             .end(function (error, res) {
                 res.should.have.status(400);
                 res.should.be.json;

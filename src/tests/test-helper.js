@@ -1,9 +1,9 @@
-var chai = require('chai'),
+
+const chai = require('chai'),
 sinon = require('sinon'),
 sinonChai = require('sinon-chai'),
-chaiHttp = require('chai-http');
-
-const server = require('../../index.js');
+chaiHttp = require('chai-http'),
+app = require('../../index');
 
 chai.use(sinonChai);
 chai.use(chaiHttp);
@@ -13,6 +13,9 @@ global.sinon = sinon;
 global.should = chai.should();
 global.chai = chai;
 
-global.app = server.app;
-global.Art = server.Art;
-global.Artist = server.Artist;
+global.Art = app.models.art.model;
+global.Artist = app.models.artist.model;
+global.app = app;
+
+
+

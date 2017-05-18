@@ -1,33 +1,67 @@
-describe('Arts Routers', function () {
+const bcrypt = require('bcrypt'), 
+jwt = require('jsonwebtoken');
+
+describe('Art Routers', function () {
     
-    let artId;
+    let artId, artistId, token;
 
     beforeEach(function (done) {
-        let newArt = new Art({
-            title: 'arty party',
-            description: 'this is the description of the art',
-            content: 'content should be image but for now it is just a text',
+        bcrypt
+        .hash('secret', 10)
+        .then((hash) => {
+
+            let newArtist = new Artist({
+            name: 'artiz',
+            nickname: 'artiznearar',
+            email: 'artiz@nearar.com',
+            password: hash,
             createdAt: Number(Date.now())
+            });
+
+            newArtist.save()
+            .then(data => {
+                artistId = data.id;
+                delete data.password;
+
+                token = jwt.sign(data, 'secret');
+
+                let newArt = new Art({
+                    title: 'arty party',
+                    description: 'this is the description of the art',
+                    content: 'content should be image but for now it is just a text',
+                    artist: artistId,
+                    createdAt: Number(Date.now())
+                });
+
+                newArt.save()
+                .then(data => {
+                    artId = data.id;
+                    done();
+                }).catch(err => {
+                    console.log(err);
+                    done();
+                });
+
+            }).catch(err => {
+                console.log(err);
+                done();
+            });
         });
 
-        newArt.save()
-        .then(data => {
-            artId = data.id;
-            done();
-        }).catch(err => {
-            console.log(err);
-            done();
-        });
+        
+
+        
     });
 
     afterEach(function (done) {
         Art.collection.drop();
+        Artist.collection.drop();
         done();
     });
 
-    it('should list ALL arts on /api/arts GET', function (done) {
+    it('should list ALL arts on /api/art GET', function (done) {
         chai.request(app)
-            .get('/api/arts')
+            .get('/api/art')
             .end(function (err, res) {
                 res.should.have.status(200);
                 res.should.be.json;
@@ -36,13 +70,15 @@ describe('Arts Routers', function () {
             });
     });   
 
-    it('should add a SINGLE art on /api/arts POST', function (done) {
+    it('should add a SINGLE art on /api/art POST', function (done) {
         chai.request(app)
-            .post('/api/arts')
+            .post('/api/art')
             .send({ 
                 'title': 'arty party',
                 'description': 'this is the description of the art',
-                'content': 'content should be image but for now it is just a text'
+                'content': 'content should be image but for now it is just a text',
+                'artist': artistId,
+                'token': token
             })
             .end(function (err, res) {
                 res.should.have.status(200);
@@ -58,12 +94,14 @@ describe('Arts Routers', function () {
             
     });
 
-    it('should throw error when input is wrong /api/arts POST', function (done) {
+    it('should throw error when input is wrong /api/art POST', function (done) {
         chai.request(app)
-            .post('/api/arts')
+            .post('/api/art')
             .send({
                 'title': 'bla bla bla',
-                'description': 'bla bla bla bla'
+                'description': 'bla bla bla bla',
+                'artist': artistId,
+                'token': token
             })
             .end(function (err, res) {
                 res.should.have.status(403);
@@ -76,9 +114,9 @@ describe('Arts Routers', function () {
             });
     });
 
-    it('should list a SINGLE art on /api/arts/<id> GET', function (done) {
+    it('should list a SINGLE art on /api/art/<id> GET', function (done) {
         chai.request(app)
-        .get('/api/arts/' + artId)
+        .get('/api/art/' + artId)
         .end(function (err, res) {
             
             res.should.have.status(200);
@@ -102,14 +140,15 @@ describe('Arts Routers', function () {
 
     });
 
-    it('should update a SINGLE art on /api/arts/<id> PUT', function (done) {
+    it('should update a SINGLE art on /api/art/<id> PUT', function (done) {
 
         chai.request(app)
-        .put('/api/arts/' + artId)
+        .put('/api/art/' + artId)
         .send({
             'title': 'this is the test version',
             'description': 'this is the test description of the art',
-            'content': 'content should be image but this is a test so for now it is just a text'
+            'content': 'content should be image but this is a test so for now it is just a text',
+            'token': token
         })
         .end(function (err, res) {
             res.should.have.status(200);
@@ -126,9 +165,10 @@ describe('Arts Routers', function () {
 
     });
 
-    it('should delete a SINGLE art on /api/arts/<id> DELETE', function (done) {
+    it('should delete a SINGLE art on /api/art/<id> DELETE', function (done) {
         chai.request(app)
-        .delete('/api/arts/' + artId)
+        .delete('/api/art/' + artId)
+        .set({ 'x-access-token': token })
         .end(function (err, res) {
             res.should.have.status(200);
             res.should.be.json;
