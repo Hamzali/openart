@@ -6,7 +6,7 @@
     "node": true,
     "mocha": true
   },
-//   "parser": "babel-eslint",
+  "parser": "babel-eslint",
   "rules": {
     "object-curly-spacing": [2, "always"],
     "strict": 0,
@@ -24,7 +24,8 @@
     "server": true,
     "app": true,
     "Art": true,
-    "Artist": true
+    "Artist": true,
+    "Verify": true
   }
 }
 

@@ -1,0 +1,17 @@
+extends layout.pug
+
+block content
+    
+    h3.flow-text.col.s6 New password
+    
+    p.grey-text Enter your new password.
+        
+    form(method="POST")
+        div.row
+            div.input-field.col.s4
+                input#password.validate(type='password', name='password')
+                label(for='password') New password
+        
+                button.btn.waves-effect.waves-light.red.lighten-2(type='submit', name='action') Submit
+
+        span #{error}

@@ -12,7 +12,7 @@ describe('Art Routers', function () {
 
             let newArtist = new Artist({
             name: 'artiz',
-            nickname: 'artiznearar',
+            nick: 'artiznearar',
             email: 'artiz@nearar.com',
             password: hash,
             createdAt: Number(Date.now())
@@ -94,7 +94,7 @@ describe('Art Routers', function () {
             
     });
 
-    it('should throw error when input is wrong /api/art POST', function (done) {
+    it('POST /api/art should throw error with invalid input', function (done) {
         chai.request(app)
             .post('/api/art')
             .send({
@@ -109,7 +109,7 @@ describe('Art Routers', function () {
 
                 res.body.should.be.a('object');
                 res.body.should.have.property('errors');
-                res.body.errors.should.be.a('array');
+                res.body.errors.should.be.a('object');
                 done();
             });
     });
@@ -157,7 +157,7 @@ describe('Art Routers', function () {
 
             res.body.should.have.property('message');
             res.body.message.should.be.a('string');
-            res.body.message.should.equal('SUCCESS');
+            res.body.message.should.equal(`success, art with id: ${artId} updated.`);
 
             done();
         });
@@ -176,7 +176,7 @@ describe('Art Routers', function () {
 
             res.body.should.have.property('message');
             res.body.message.should.be.a('string');
-            res.body.message.should.equal('SUCCESS');
+            res.body.message.should.equal(`success, art with id: ${artId} removed.`);
 
             done();
         });

@@ -7,64 +7,52 @@ module.exports =  app => {
     const Artist = app.models.artist;
     const router = new Router();
 
-    router.post('/', (req, res) => {
+    router.post('/', async (req, res) => {
         req.checkBody('email', 'Invalid email').notEmpty().isEmail();
         req.checkBody('password', 'Invalid password').notEmpty().isString();
 
-        req.getValidationResult().then((result) => {
-            // There is a validation error.
-            if (!result.isEmpty()) {
-                res.status(400).send({ 'message': 'failed, email or password invalid.' });
-                return;
-            }
+        const result = await req.getValidationResult();
 
-            // Find the user.
-            Artist.findByEmail(req.body.email)
-            .then(data => {
-                
-                if (!data) {
+        // There is a validation error.
+        if (!result.isEmpty()) {
+            res.status(400).send({ 'message': 'failed, email or password invalid.' });
+            return;
+        }
+        
+        try {
+            const artist = await Artist.findByEmail(req.body.email);
 
-                    // User data not exists.
-                    res.status(400).send({ 'message': 'failed, email or password invalid.' });
-                    return;
+            const isAuth = await bcrypt.compare(req.body.password, artist.password);
 
-                } 
+            if (!artist.isVerified) {
+                // Artist needs to verify his/her account.
+                res.status(403).send({ 'message': 'failed, verify your account.' });
+            } else if (isAuth) {
+                // Don't send the sensitive data with token. 
+                delete artist.password;
 
-                // check the password.
-                bcrypt.compare(req.body.password, data.password)
-                .then(isAuth => {
-                    if (isAuth) {
+                // Create the token.
+                jwt.sign(artist, 'secret', (err, token) => { // TODO: add expire date.
+                    if (err) throw err;
+
+                    // Send to the user.
+                    res.send({ 
+                        'message': 'success, token generated.',
+                        'token': token
+                    });
                     
-                        // Don't send the sensitive data with token. 
-                        delete data.password;
-
-                        // Create the token.
-                        const token = jwt.sign(data, 'secret'); // TODO: add expire date.
-                        
-                        // Send to the user.
-                        res.send({ 
-                            'message': 'success, token generated.',
-                            'token': token
-                        });
-
-                    } else {
-
-                        // Passwords do not match.
-                        res.status(403).send({ 'message': 'failed, email or password invalid.' });
-
-                    }
                 });
                 
-            })
-            .catch(err => {
-                console.log(err);
-                // User data not exists in DB.`
-                res.status(400).send({ 'message': 'failed, email or password invalid.' });
-            });
+            } else {
+                // Passwords do not match.
+                res.status(403).send({ 'message': 'failed, email or password invalid.' });
+            }
 
-
-        });
-        
+        } catch (err) {
+            console.log(err);
+            res.status(400).send({ 'message': 'failed, email or password invalid.' });
+        }
+                
     });
 
     app.use('/auth', router);

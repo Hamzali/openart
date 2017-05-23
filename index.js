@@ -17,6 +17,7 @@ const consign = require('consign');
 
 consign({ cwd: 'src' })
     .include('configs')
+    .then('utils')
     .then('models')
     .then('middlewares')
     .then('routers')

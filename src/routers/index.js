@@ -4,10 +4,10 @@ module.exports = app => {
         res.render('index');
     });
 
-    // not found page.
-    app.get('*', (req, res) => {
-        res.render('404');
-    });
+    // // not found page.
+    // app.get('*', (req, res) => {
+    //     res.render('404');
+    // });
 
     return this;
 };

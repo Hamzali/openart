@@ -9,9 +9,10 @@ describe('JWT Auth', function () {
 
             let newArtist = new Artist({
             name: 'artiz',
-            nickname: 'artizneararlabazarda',
+            nick: 'artizneararlabazarda',
             email: 'artiz@arar.com',
             password: hash,
+            isVerified: true,
             createdAt: Number(Date.now())
             });
 

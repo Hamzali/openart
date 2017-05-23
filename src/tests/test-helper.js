@@ -15,6 +15,7 @@ global.chai = chai;
 
 global.Art = app.models.art.model;
 global.Artist = app.models.artist.model;
+global.Verify = app.models.verify.model;
 global.app = app;
 
 

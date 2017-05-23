@@ -5,9 +5,10 @@ module.exports = app => {
     const mongoose = app.mongoose;
     const Schema = mongoose.Schema;
     
-    // Validate email and nickname. 
-    // TODO: refactor model isUnique out, make it more pleasent.
-    const isUnique = (property) => {
+    // let Artist;
+    // const isUnique = app.utils.model.isUnique(Artist);
+
+    const isUnique = property => {
         return (val, cb) => {
             let obj = {};
             obj[property] = val;
@@ -16,11 +17,11 @@ module.exports = app => {
             .then(data => {
                 if (!data) return cb(true);
                 cb(false);
-
             })
             .catch(err => {
                 // data does not exists.
-                console.log(err);
+                if (process.env.NODE_ENV === 'dev') console.log(err);
+                
                 cb(true);
             });  
         };
@@ -33,12 +34,12 @@ module.exports = app => {
             required: true
         },
 
-        nickname: {
+        nick: {
             type: String,
             validate: {
                 isAsync: true,
-                validator: isUnique('nickname'), 
-                message: 'nickname already exists'
+                validator: isUnique('nick'), 
+                message: 'nick already exists'
             },
             required: true
         },
@@ -64,21 +65,41 @@ module.exports = app => {
         },
 
         createdAt: Date
-    }, { versionKey: false, collection: 'artists' });
+    }, { versionKey: false, collection: 'artist' });
 
     
     const Artist = mongoose.model('Artist', artistSchema);
-    
+
     this.findArtists = query => {
-        return Artist.find(query).lean().exec();
+        return Artist.find(query).lean().exec().then(artists => {
+            return artists.map((artist) => {
+                
+                delete artist.password;
+                delete artist.email;
+
+                return artist;
+            });
+        });
     };
 
     this.findById = id => {
-        return Artist.findById(id).lean().exec();
+        return Artist.findById(id).lean().exec().then(artist => {
+            if (!artist) throw new Error('No artist found!');
+
+            delete artist.password;
+
+            return artist;
+        });
     };
 
     this.findByEmail = email => {
-        return Artist.findOne({ 'email': email }).lean().exec();
+        return Artist.findOne({ 'email': email }).lean().exec()
+        .then(artist => {
+            if (!artist) {
+                throw new Error('No such user found with ' + email + '.');
+            }
+            return artist;
+        });
     };
 
     this.create = params => {
@@ -90,11 +111,37 @@ module.exports = app => {
             params.password = hash;
         }).then(() => {
              return (new Artist(params)).save();
+        }).then(artist => {
+            return artist.email;
         });
     };
 
+
     this.update = (id, params) => {
-        return Artist.findByIdAndUpdate(id, params).exec();
+        return Artist.findByIdAndUpdate(id, params, { new: true }).exec()
+        .then(artist => {
+            if (!artist) throw new Error('something went wrong!');
+            return artist;
+        });
+    };
+
+    this.updatePassword = (email, password)  => {
+        
+        return bcrypt.hash(password, 10)
+        .then(hash => {
+            return Artist.findOneAndUpdate({ 'email': email }, { $set: { password: hash } });
+        }).then(artist => {
+            if (!artist) throw new Error('No such user in db.');
+            
+            delete artist.password;
+
+            return artist;
+        });
+
+    };
+
+    this.verify = (email) => {
+        return Artist.findOneAndUpdate({ 'email': email }, { $set: { isVerified: true } });
     };
 
     this.remove = id => {
