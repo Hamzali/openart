@@ -4,6 +4,10 @@
   "repository": "https://github.com/Hamzali/openart.git",
   "description": "open source art api",
   "main": "index.js",
+  "engines": {
+    "node": "6.10.3",
+    "npme": "4.5.0"
+  },
   "scripts": {
     "test": "export NODE_ENV=test && mocha --timeout 15000 -r ./src/tests/test-helper -R spec src/tests/**/*.test.js",
     "start": "node NODE_ENV=prod index.js",
