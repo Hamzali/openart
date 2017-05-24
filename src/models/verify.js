@@ -4,36 +4,9 @@ module.exports = app => {
     const mongoose = app.mongoose;
     const Schema = mongoose.Schema;
     
-    // let Verify;
-    // const isUnique = app.utils.model.isUnique(Verify);
-
-    const isUnique = property => {
-        return (val, cb) => {
-            let obj = {};
-            obj[property] = val;
-            Verify.findOne(obj)
-            .exec()
-            .then(data => {
-                if (!data) return cb(true);
-                cb(false);
-            })
-            .catch(err => {
-                // data does not exists.
-                if (process.env.NODE_ENV === 'dev') console.log(err);
-                
-                cb(true);
-            });  
-        };
-    };
-
     const verifySchema = new Schema({
         artist: {
-            type: String,
-            validate: {
-                isAsync: true,
-                validator: isUnique('artist'),
-                message: 'Token already created.'
-            }
+            type: String
         },
 
         token: String,
@@ -42,6 +15,14 @@ module.exports = app => {
     
     const Verify = mongoose.model( 'Verify', verifySchema);
 
+    const isUnique = app.utils.model.isUnique(Verify);
+    
+    Verify.schema.path('artist').validate({
+        isAsync: true,
+        validator: isUnique('artist'),
+        message: 'Token already created.'
+    });
+        
     this.create = (email) => {
         const expires = new Date();
         expires.setHours(expires.getHours() + 6);// 6 hours limit.

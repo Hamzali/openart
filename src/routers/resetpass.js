@@ -3,7 +3,6 @@ module.exports = app => {
     const Artist = app.models.artist;
     const sendResetPassword = app.configs.mailer.sendResetPassword;
 
-    // TODO: refactor reset password.
     app.get('/forgotpassword', (req, res) => {
         res.render('respass-req');
     });
@@ -43,8 +42,7 @@ module.exports = app => {
                 res.render('respass-req', { 'error': 'failed, no such user found.' });
                 return;
             }
-
-            
+   
         }
 
         try {
@@ -74,7 +72,7 @@ module.exports = app => {
     });
     
     app.post('/forgotpassword/:token', async (req, res) => {
-        req.checkBody('password', 'invalid password').notEmpty().isString(); // TODO: write a password validation function.
+        req.checkBody('password', 'Invalid password').notEmpty().isValidPassword();
 
         const result = await req.getValidationResult();
         if (!result.isEmpty()) {

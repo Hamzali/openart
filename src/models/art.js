@@ -31,10 +31,11 @@ module.exports = app => {
     };
 
     this.findById = (id) => {
-        return Art.findById(id).lean().exec().then(art => {
+        return Art.findById(id).exec().then(art => {
             if (!art) throw new Error('invalid data retrieved from db.');
-            return art;
-        });
+            art.viewCount += 1;
+            return art.save({ validateBeforeSave: false });
+        }).then(art => art);
     };
 
     this.create = (params) => {
@@ -66,13 +67,10 @@ module.exports = app => {
                 art[prop] = params[prop];
             }
 
-            return art.save();
+            return art.save({ validateBeforeSave: false });
         });
     };
 
-    
-    this.incViewCount = updateCount('viewCount', 1);
-    
     this.incLikeCount = updateCount('likeCount', 1);
     this.decLikeCount = updateCount('likeCount', -1);
 

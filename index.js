@@ -1,4 +1,5 @@
 if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test') require('dotenv').config();
+
 const path = require('path');
 
 const express = require('express'),
@@ -10,8 +11,8 @@ app.set('view engine', 'pug');
 app.set('views', './src/views');
 
 // public folder to serve.
-app.use(express.static(path.join(__dirname, 'src/public')));
-
+app.use('/static', express.static(path.join(__dirname, 'src/public')));
+app.use('/avatars', express.static(path.join(__dirname, 'avatars')));
 
 const consign = require('consign');
 

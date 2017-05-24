@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt'), 
 jwt = require('jsonwebtoken');
 
-describe('Art Routers', function () {
+describe('Art', function () {
     
     let artId, artistId, token;
 
@@ -59,7 +59,7 @@ describe('Art Routers', function () {
         done();
     });
 
-    it('should list ALL arts on /api/art GET', function (done) {
+    it('GET /api/art should list ALL arts', function (done) {
         chai.request(app)
             .get('/api/art')
             .end(function (err, res) {
@@ -70,7 +70,7 @@ describe('Art Routers', function () {
             });
     });   
 
-    it('should add a SINGLE art on /api/art POST', function (done) {
+    it('POST /api/art should create a SINGLE art', function (done) {
         chai.request(app)
             .post('/api/art')
             .send({ 
@@ -114,7 +114,7 @@ describe('Art Routers', function () {
             });
     });
 
-    it('should list a SINGLE art on /api/art/<id> GET', function (done) {
+    it('GET /api/art/:id should list a SINGLE art', function (done) {
         chai.request(app)
         .get('/api/art/' + artId)
         .end(function (err, res) {
@@ -133,6 +133,10 @@ describe('Art Routers', function () {
             res.body.should.have.property('content');
             res.body.content.should.be.a('string');
 
+            res.body.should.have.property('viewCount');
+            res.body.viewCount.should.be.a('number');
+            res.body.viewCount.should.equal(1);
+
             res.body.should.have.property('createdAt');
             res.body.createdAt.should.be.a('string');
             done();
@@ -140,7 +144,7 @@ describe('Art Routers', function () {
 
     });
 
-    it('should update a SINGLE art on /api/art/<id> PUT', function (done) {
+    it('PUT /api/art/:id should update a SINGLE art', function (done) {
 
         chai.request(app)
         .put('/api/art/' + artId)
@@ -165,7 +169,7 @@ describe('Art Routers', function () {
 
     });
 
-    it('should delete a SINGLE art on /api/art/<id> DELETE', function (done) {
+    it('DELETE /api/art/:id should delete a SINGLE art', function (done) {
         chai.request(app)
         .delete('/api/art/' + artId)
         .set({ 'x-access-token': token })

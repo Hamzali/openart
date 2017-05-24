@@ -1,22 +1,25 @@
 module.exports = () => {
-
+    // Model unique validator.
     this.isUnique = model => {
         return property => {
-            return (val, cb) => {
+            return async (val, cb) => {
                 let obj = {};
                 obj[property] = val;
-                model.findOne(obj)
-                .exec()
-                .then(data => {
-                    if (!data) return cb(true);
-                    cb(false);
-                })
-                .catch(err => {
-                    // data does not exists.
-                    if (process.env.NODE_ENV === 'dev') console.log(err);
+                
+                let result;
+                try {
+                    result = await model.findOne(obj).exec();
                     
-                    cb(true);
-                });  
+                    if (result) {
+                        return cb(false);
+                    }
+
+                    
+                } catch (err) {
+                    console.log(err);
+                }
+                
+                return cb(true);
             };
         };
     };

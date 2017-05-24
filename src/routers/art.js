@@ -7,7 +7,6 @@ module.exports = app => {
     const auth = app.middlewares.auth;
 
 
-    // TODO: Refactor the error messages
     // all art pieces.
     router.get('/', async (req, res) => {
 

@@ -5,28 +5,6 @@ module.exports = app => {
     const mongoose = app.mongoose;
     const Schema = mongoose.Schema;
     
-    // let Artist;
-    // const isUnique = app.utils.model.isUnique(Artist);
-
-    const isUnique = property => {
-        return (val, cb) => {
-            let obj = {};
-            obj[property] = val;
-            Artist.findOne(obj)
-            .exec()
-            .then(data => {
-                if (!data) return cb(true);
-                cb(false);
-            })
-            .catch(err => {
-                // data does not exists.
-                if (process.env.NODE_ENV === 'dev') console.log(err);
-                
-                cb(true);
-            });  
-        };
-    };
-
     const artistSchema = new Schema({
         
         name: {
@@ -36,21 +14,11 @@ module.exports = app => {
 
         nick: {
             type: String,
-            validate: {
-                isAsync: true,
-                validator: isUnique('nick'), 
-                message: 'nick already exists'
-            },
             required: true
         },
 
         email: {
             type: String,
-            validate: {
-                isAsync: true,
-                validator: isUnique('email'), 
-                message: 'email already exists'
-            },
             required: true
         },
 
@@ -59,16 +27,44 @@ module.exports = app => {
             required: true
         },
 
+        avatar: String,
+
         isVerified: {
             type: Boolean,
             default: false
         },
 
+        loc: {
+            type: [Number],
+            index: '2d'
+        },
+
+        birthday: Date,
+
+        bio: String, // TODO: Validate bio, birthday.
+
         createdAt: Date
     }, { versionKey: false, collection: 'artist' });
 
+    // artistSchema.index({ location: '2dsphere' });
+
     
     const Artist = mongoose.model('Artist', artistSchema);
+
+    // Validators
+    const isUnique = app.utils.model.isUnique(Artist);
+
+    Artist.schema.path('email').validate({
+        validator: isUnique('email'),
+        isAsync: true,
+        message: 'email already exists'
+    });
+
+    Artist.schema.path('nick').validate({
+        validator: isUnique('nick'),
+        isAsync: true,
+        message: 'nick already exists'
+    });
 
     this.findArtists = query => {
         return Artist.find(query).lean().exec().then(artists => {
@@ -76,6 +72,8 @@ module.exports = app => {
                 
                 delete artist.password;
                 delete artist.email;
+                delete artist.location;
+                delete artist.bio;
 
                 return artist;
             });
@@ -104,13 +102,13 @@ module.exports = app => {
 
     this.create = params => {
         params.createdAt = Number(Date.now());
+        params.avatar = 'https://localhost:3030/avatars/default_avatar_' + Math.floor(Math.random() * 50) + '.svg';
 
         // salt round 10
         return bcrypt.hash(params.password, 10)
         .then(hash => {
             params.password = hash;
-        }).then(() => {
-             return (new Artist(params)).save();
+            return (new Artist(params)).save();
         }).then(artist => {
             return artist.email;
         });
@@ -118,11 +116,71 @@ module.exports = app => {
 
 
     this.update = (id, params) => {
-        return Artist.findByIdAndUpdate(id, params, { new: true }).exec()
+
+        const validateUpdate = property => {
+            return isUnique(property)(params[property], (isValid) => {
+                // console.log(`isUnique callback: newVal: ${params[property]} isValid: ${isValid}`);
+                if (!isValid) return new Error(property + ' already exists.');
+            });
+        };
+    
+        return Artist.findById(id).exec().then(artist => {
+            if (!artist) throw new Error('No user found.');
+
+            // encrypt password for db.
+            if (params.password) {
+                return bcrypt.hash(params.password, 10)
+                .then(hash => {
+                    params.password = hash;
+                    return artist;
+                });
+            } else {
+                return artist;
+            }
+
+        })
         .then(artist => {
-            if (!artist) throw new Error('something went wrong!');
+            // format location data for database.
+            if (params.location) {
+                params.location = {
+                    type: 'Point',
+                    coordinates: params.location
+                };
+            }
+
             return artist;
+        })
+        .then(artist => {
+            if (params.nick) {
+                return validateUpdate('nick').then((err) => {
+                    if (err) throw err;
+                    return artist;
+                });
+            }
+            
+            return artist;
+        })
+        .then(artist => {
+            
+            if (params.email) {
+                return validateUpdate('email').then((err) => {
+                    if (err) throw err;
+                    return artist;
+                });
+            }
+            
+            return artist;
+                  
+        })
+        .then(artist => {
+            for (var prop in params) {
+                artist[prop] = params[prop];
+            }
+
+            return artist.save({ validateBeforeSave: false });
         });
+        
+        
     };
 
     this.updatePassword = (email, password)  => {

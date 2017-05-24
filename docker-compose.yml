@@ -1,0 +1,15 @@
+db:
+  image: mongo
+  ports:
+    - "27017:27017"
+  restart: always
+web:
+  build: .
+  volumes:
+    - ./:/var/www/app/current/
+    - /var/www/app/current/node_modules
+  ports:
+    - "3000:3000"
+  links:
+    - db
+  #  command: pm2 start processes.json --no-daemon

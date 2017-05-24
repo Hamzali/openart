@@ -3,9 +3,12 @@ jwt = require('jsonwebtoken');
 
 
 describe('Verify account', function () {
-    const email = 'mamut@yanli.com';
-    let token;
-    let verifyToken, artistId;
+    const newUser = {
+        'name': 'mamut kollariyandan',
+        'nick': 'yandankollu',
+        'email': 'mamut@yanli.com',
+        'password': 'gizlimamut'
+    };
 
     beforeEach(function (done) {
         
@@ -22,14 +25,11 @@ describe('Verify account', function () {
             });
 
             newArtist.save()
-            .then(data => {
-                artistId = data.id;
-                delete data.password;
-
-                token = jwt.sign(data, 'secret');
+            .then(() => {
                 done();
-            }).catch(err => {
-                console.log(err);
+            })
+            .catch(err => {
+                // console.log(err);
                 done();
             });
         });
@@ -37,14 +37,53 @@ describe('Verify account', function () {
     });
 
     afterEach(function (done) {
-        Artist.collection.drop();
-        // TODO: learn to drop verify collection.
+        Artist.collection.drop().catch(err => err);
+        Verify.collection.drop().catch(err => err);
         done();
     });
 
-    it('POST /signup should create an artist and verify it.', function (done) {
-        // TODO: test it more extensively.
-        done();
+    it('POST /signup should create an artist and GET /verify/:token should verify user', function (done) {
+        chai.request(app)
+        .post('/signup')
+        .send(newUser)
+        .end(function (error, res) { 
+            res.should.have.status(200);
+            res.should.be.json;
+
+            res.body.should.be.an('object');
+            res.body.should.have.property('message');
+            res.body.message.should.be.a('string');
+            res.body.message.should.equal('success, registered and verification email sent.');
+
+            Verify.findOne({ artist: newUser.email })
+            .then(v => {
+                if (!v) throw new Error('no token');
+                chai.request(app)
+                .get('/verify/' + v.token)
+                .end(function (error, res) { 
+                    res.should.have.status(200);
+                    res.should.be.html;
+
+                    Artist.findOne({ email: newUser.email })
+                    .then(artist => {
+                        artist.isVerified.should.equal(true);
+                        done();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        done();
+                    });
+                    
+                });
+
+            }).catch(err => {
+                console.log(err);
+                done();
+            });
+            
+            
+        });
+        
     });
 
     // TODO: write tests for verify reset, expires and edge cases.
@@ -52,11 +91,7 @@ describe('Verify account', function () {
     it('POST /signup should give invalid error', function (done) {
         chai.request(app)
         .post('/signup')
-        .send({
-            'name': 'mamut kollariyandan',
-            'nick': 'yandankollu',
-            'password': 'gizlimamut'
-        })
+        .send()
         .end(function (error, res) { 
             res.should.have.status(403);
             res.should.be.json;
@@ -64,7 +99,7 @@ describe('Verify account', function () {
             res.body.should.be.an('object');
             res.body.should.have.property('message');
             res.body.message.should.be.a('string');
-            res.body.message.should.equal('Validation error.');
+            res.body.message.should.equal('fail, validation error.');
 
             res.body.should.have.property('errors');
             res.body.errors.should.be.a('object');

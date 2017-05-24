@@ -86,8 +86,9 @@ describe('Artist', function () {
 
 
     it('GET api/artist/:id should fail if id is not found', function (done) {
+        const testId = 'thisisnoid';
         chai.request(app)
-        .get('/api/artist/thisisnoid')
+        .get('/api/artist/' + testId)
         .end(function (error, res) { 
             res.should.have.status(400);
             res.should.be.json;
@@ -95,7 +96,7 @@ describe('Artist', function () {
             res.body.should.be.an('object');
             res.body.should.have.property('message');
             res.body.message.should.be.a('string');
-            res.body.message.should.equal('Id is not found, please send a valid id.');
+            res.body.message.should.equal(`fail, no artist found with id: ${testId}.`);
 
             done();
         });
@@ -140,9 +141,34 @@ describe('Artist', function () {
         });
     });
 
+    it('PUT api/artist/:id should not update with same nick', function (done) {
+        const newData = {
+            'nick': 'artizneararlabazarda',
+            token: token
+        };
+
+        chai.request(app)
+        .put('/api/artist/' + artistId)
+        .send(newData)
+        .end(function (error, res) {
+            res.should.have.status(400);
+            res.should.be.json;
+
+            res.body.should.be.an('object');
+            res.body.should.have.property('message');
+            res.body.message.should.be.a('string');
+            // res.body.message.should.equal('fail, artist data cannot updated.');
+
+            done();
+            
+
+        });
+    });
+
     it('PUT api/artist/:id should update only the given info', function (done) {
         const newData = {
-            'nick': 'newnick',
+            'nick': 'newestnick',
+            'password': 'pass123',
             token: token
         };
 
@@ -165,11 +191,9 @@ describe('Artist', function () {
                 res.should.have.status(200);
                 res.should.be.json;
 
-                let { name, nick, email } = res.body;
+                let { nick } = res.body;
 
-                name.should.be.a('string');
-                email.should.be.a('string');
-
+                nick.should.be.a('string');
                 nick.should.equal(newData.nick);
                 
                 done();
@@ -211,7 +235,7 @@ describe('Artist', function () {
             res.body.should.be.an('object');
             res.body.should.have.property('message');
             res.body.message.should.be.a('string');
-            res.body.message.should.equal('success');
+            res.body.message.should.equal('success, artist removed.');
 
             chai.request(app)
             .get('/api/artist/' + artistId)
@@ -222,7 +246,7 @@ describe('Artist', function () {
                 res.body.should.be.an('object');
                 res.body.should.have.property('message');
                 res.body.message.should.be.a('string');
-                res.body.message.should.equal('Id is not found, please send a valid id.');
+                res.body.message.should.equal(`fail, no artist found with id: ${artistId}.`);
 
                 done();
             });

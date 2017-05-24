@@ -5,7 +5,7 @@
   "description": "open source art api",
   "main": "index.js",
   "engines": {
-    "node": "7.10.0",
+    "node": "7.8.0",
     "npme": "4.5.0"
   },
   "scripts": {
