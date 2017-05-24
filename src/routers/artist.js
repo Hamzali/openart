@@ -77,6 +77,7 @@ module.exports = app => {
                 const error = err.errors.nick || err.errors.email;
                 res.status(400).send({ 'message': 'fail, ' + (error.message) });
             } else {
+                console.log(err);
                 res.status(400).send({ 'message': 'Could not be able to save the data.' });
             }
         }
