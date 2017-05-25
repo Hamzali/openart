@@ -1,18 +1,13 @@
 const nodemailer = require('nodemailer');
 module.exports = () => {
 
+    // TODO: Solve the mail problem until production.
     const transporter = nodemailer.createTransport({
-        port: 1025,
-        ignoreTLS: true
-        // service: 'Gmail',
-        // auth: {
-        //     type: 'OAuth2',
-        //     user: "hamzali.tas.95@gmail.com", // Your gmail address.
-        //     clientId: "1022881397483-evftaplonoqo2pqmn2qbp303nlpeijrf.apps.googleusercontent.com",
-        //     clientSecret: "mRJomWKvD2F52MABknpVZ0SQ",
-        //     refreshToken: "1/xT9YwDh16tgcuoVtiBA_Tbn4r9UI9nwSmudtEGFirrbUNne4ZX-0XPYw9vq77JRt",
-        //     accessToken: "ya29.GltVBDUiGtvUDZsrQvD4ErWijf0361mwQFvzqGkGkGHaPqwnvA8oyOvsRniGEpvEbCj0xuIWK3TBq1u6W8-GQcvyb2Nua8AKuzd0xWVs35tyytjq6Hg7d_U4We86", 
-        // }       
+        service: 'SendGrid',
+        auth: {
+            user: 'hamzali',
+            pass: '1954lotr'
+        }       
     });
 
     this.sendVerification = (to, link) => {
@@ -27,9 +22,7 @@ module.exports = () => {
 
                 resolve(info);
             });
-        });
-
-        
+        });        
     };
 
     this.sendResetPassword = (to, link) => {

@@ -56,6 +56,8 @@ RUN npm i -g pm2 mocha
 # Add application files
 ADD . /var/www/app/current
 
+# COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
 #Expose the port
 EXPOSE 3000
 

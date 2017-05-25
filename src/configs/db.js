@@ -7,7 +7,7 @@ module.exports = app => {
     mongoose.Promise = global.Promise;
 
     if (process.env.NODE_ENV === 'test') process.env.MONGODB_URI = 'mongodb://localhost/test';
-    // console.log(process.env.MONGODB_URI = 'mongodb://db/prod');
+    
     mongoose.connect(process.env.MONGODB_URI || ('mongodb://db/' + process.env.NODE_ENV));
     // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/' + 'test');
 
