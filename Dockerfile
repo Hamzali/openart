@@ -59,8 +59,6 @@ ADD . /var/www/app/current
 #Expose the port
 EXPOSE 3000
 
-RUN export MONGODB_URI="mongodb://db/"
-
 CMD ["pm2", "start", "processes.json", "--no-daemon"]
 
 # voila!
