@@ -11,5 +11,5 @@ node_js:
 #     - gcc-4.8
 #     - g++-4.8
 services:
-  # - mongodb
+  - mongodb
   - docker
