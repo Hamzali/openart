@@ -1,1 +1,1 @@
-web: node ./node_modules/.bin/pm2 start processes.json --no-daemon
+web: node ./node_modules/.bin/pm2 start processes.json --attach
