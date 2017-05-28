@@ -3,12 +3,11 @@ module.exports = () => {
 
     // TODO: Solve the mail problem until production.
     const transporter = nodemailer.createTransport({
-        // service: 'SendGrid',
-        port: 2525,
+        service: 'SendGrid',
         auth: {
-            // user: 'hamzali',
-            // pass: '1954lotr'
-            api_key: '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'
+            user: 'hamzali',
+            pass: '1954lotr'
+            
         }       
     });
 
