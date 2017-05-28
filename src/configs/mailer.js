@@ -19,7 +19,9 @@ module.exports = () => {
                 html: `<p>please click this link ${link} to activate your account.</p>`
             }, (err, info) => {
                 if (err) reject(err);
-
+                
+                console.log(info);
+                
                 resolve(info);
             });
         });

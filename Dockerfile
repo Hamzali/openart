@@ -51,7 +51,7 @@ ADD package.json ./
 RUN npm install
 
 # Install pm2 so we can run our application
-RUN npm i -g pm2 mocha
+# RUN npm install -g pm2 mocha
 
 # Add application files
 ADD . /var/www/app/current
@@ -61,6 +61,7 @@ ADD . /var/www/app/current
 #Expose the port
 EXPOSE 3000
 
-CMD ["pm2", "start", "processes.json", "--no-daemon"]
+# CMD ["pm2", "start", "processes.json", "--no-daemon"]
+CMD ["npm", "test"]
 
 # voila!

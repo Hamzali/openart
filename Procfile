@@ -1,1 +1,1 @@
-web: node ./node_modules/.bin/pm2 start --attach processes.json
+web: npm start

@@ -47,7 +47,9 @@ describe('Verify account', function () {
         chai.request(app)
         .post('/signup')
         .send(newUser)
-        .end(function (error, res) { 
+        .end(function (error, res) {
+            console.log(error);
+            console.log(res);
             res.should.have.status(200);
             res.should.be.json;
 
@@ -58,15 +60,19 @@ describe('Verify account', function () {
             
             Verify.findOne({ artist: newUser.email })
             .then(v => {
+                console.log(v);
                 if (!v) throw new Error('no token');
                 chai.request(app)
                 .get('/verify/' + v.token)
-                .end(function (error, res) { 
+                .end(function (error, res) {
+                    console.log(error);
+                    console.log(res);
                     res.should.have.status(200);
                     res.should.be.html;
 
                     Artist.findOne({ email: newUser.email })
                     .then(artist => {
+                        console.log(artist);
                         artist.isVerified.should.equal(true);
                         done();
                     })

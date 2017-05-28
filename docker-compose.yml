@@ -7,10 +7,11 @@ nginx:
 db:
   image: mongo
   ports:
-    - "27017"
+    - "27017:27017"
   restart: always
 web:
   build: .
+  command: npm run dev
   volumes:
     - ./:/var/www/app/current/
     - /var/www/app/current/node_modules
@@ -19,4 +20,4 @@ web:
   
   links:
     - db
-  #  command: pm2 start processes.json --no-daemon
+  #  
