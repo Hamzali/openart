@@ -20,8 +20,6 @@ module.exports = () => {
             }, (err, info) => {
                 if (err) reject(err);
                 
-                console.log(info);
-                
                 resolve(info);
             });
         });
