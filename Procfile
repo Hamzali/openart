@@ -1,1 +1,1 @@
-web: node index.js
+web: node ./node_modules/.bin/pm2 start processes.json --no-daemon

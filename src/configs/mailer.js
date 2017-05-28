@@ -22,7 +22,7 @@ module.exports = () => {
 
                 resolve(info);
             });
-        });        
+        });
     };
 
     this.sendResetPassword = (to, link) => {
