@@ -9,7 +9,7 @@
     "npme": "4.5.0"
   },
   "scripts": {
-    "test": "export NODE_ENV=test && mocha --timeout 150000 -r ./src/tests/test-helper -R spec src/tests/**/*.test.js",
+    "test": "export NODE_ENV=test && mocha --timeout 15000 -r ./src/tests/test-helper -R spec src/tests/**/*.test.js",
     "start": "export NODE_ENV=production && pm2 start --attach processes.json",
     "dev": "export NODE_ENV=dev && nodemon index.js",
     "start-db": "mkdir data && mongod --dbpath data --fork --logpath /dev/null",
