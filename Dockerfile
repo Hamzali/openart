@@ -60,9 +60,6 @@ ADD . /var/www/app/current
 
 #Expose the port
 EXPOSE 3000
-EXPOSE 25
-EXPOSE 2525
-EXPOSE 587
 
 CMD ["pm2", "start", "processes.json", "--no-daemon"]
 # CMD ["npm", "test"]

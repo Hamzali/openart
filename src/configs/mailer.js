@@ -4,10 +4,9 @@ module.exports = () => {
     // TODO: Solve the mail problem until production.
     const transporter = nodemailer.createTransport({
         service: 'SendGrid',
-        port: 1025,
         auth: {
-            user: 'hamzali',
-            pass: '1954lotr'
+            user: process.env.SENDGRID_USER,
+            pass: process.env.SENDGRID_PASS
             
         }       
     });
