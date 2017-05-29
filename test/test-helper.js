@@ -3,7 +3,7 @@ const chai = require('chai'),
 sinon = require('sinon'),
 sinonChai = require('sinon-chai'),
 chaiHttp = require('chai-http'),
-app = require('../../index');
+app = require('../index');
 
 chai.use(sinonChai);
 chai.use(chaiHttp);

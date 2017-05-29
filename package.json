@@ -9,7 +9,7 @@
     "npm": "4.5.0"
   },
   "scripts": {
-    "test": "export NODE_ENV=test && istanbul cover mocha --timeout 15000 -r ./src/tests/test-helper -R spec src/tests/**/*.test.js",
+    "test": "export NODE_ENV=test && istanbul cover mocha -r ./test/test-helper -R",
     "start": "export NODE_ENV=production && pm2 start --attach processes.json",
     "dev": "export NODE_ENV=dev && nodemon index.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
