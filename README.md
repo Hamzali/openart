@@ -1,5 +1,7 @@
 # OpenArt
 
+[![Coverage Status](https://coveralls.io/repos/hamzali/openart/badge.svg?branch=master)](https://coveralls.io/r/hamzali/openart?branch=master)
+
 An open source art community website.\
 **demo:** [openart.heroku.com](https://openart.heroku.com)
 
