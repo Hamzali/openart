@@ -4,6 +4,6 @@ ssh -tt hamzali@artizhub.com <<EOF
   cd ~/openart
   git pull
   npm install --production
-  pm2 restrart all
+  pm2 restart all
   exit
 EOF
