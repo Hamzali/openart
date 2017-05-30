@@ -6,8 +6,16 @@
 [![Build Status](https://travis-ci.org/Hamzali/openart.svg?branch=master)](https://travis-ci.org/Hamzali/openart)
 
 ## Jenkins
-[![Build Status](http://jenkins.artizhub.com/job/openart/badge/icon?job=openart)](http://jenkins.artizhub.com/job/openart/)
-                 
+### with view
+[![Build Status](http://jenkins.artizhub.com/job/openart/badge/icon)](http://jenkins.artizhub.com/job/openart/)
+
+[![Build Status](http://jenkins.artizhub.com/buildStatus/icon?job=openart)](http://jenkins.artizhub.com/job/openart/)
+
+### without view
+[![Build Status](http://jenkins.artizhub.com/job/openart/badge/icon)](http://jenkins.artizhub.com/job/openart)
+
+[![Build Status](http://jenkins.artizhub.com/buildStatus/icon?job=openart)](http://jenkins.artizhub.com/job/openart)
+
 An open source art community website.\
 **demo:** [openart.heroku.com](https://openart.heroku.com)
 
