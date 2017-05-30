@@ -3,6 +3,7 @@
         {
             "name": "openart",
             "script": "./index.js",
+            "port": 3000,
             "merge_logs": true,
             "max_restarts": 2,
             "instances": 1,
