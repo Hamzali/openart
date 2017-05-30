@@ -24,7 +24,7 @@ consign({ cwd: 'src' })
     .then('routers')
     .into(app);
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.NODE_PORT || process.env.PORT, () => {
     if (process.env.NODE_ENV === 'dev') console.log('App listening on PORT:' + process.env.PORT);
 });
 
