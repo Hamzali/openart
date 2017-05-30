@@ -1,5 +1,4 @@
-#!/bin/sh
-
+-#!/bin/sh
 ssh app@artizhub.com <<EOF
   cd ~/openart
   git pull
