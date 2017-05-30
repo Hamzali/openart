@@ -10,7 +10,7 @@
   },
   "scripts": {
     "pretest": "export NODE_ENV=test",
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -R spec",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha",
     "posttest": "./node_modules/.bin/istanbul report cobertura",
     "start": "export NODE_ENV=production && pm2 start --attach processes.json",
     "dev": "export NODE_ENV=dev && nodemon index.js",
