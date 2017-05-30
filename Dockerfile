@@ -61,6 +61,9 @@ ADD . /var/www/app/current
 #Expose the port
 EXPOSE 3000
 
+ENV MONGODB_URI mongodb://db/dev
+ENV NODE_ENV dev
+
 CMD ["pm2", "start", "processes.json", "--no-daemon"]
 # CMD ["npm", "test"]
 

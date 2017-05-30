@@ -5,7 +5,7 @@ module.exports = app => {
     // database connection.
     mongoose.Promise = global.Promise;
  
-    mongoose.connect(process.env.MONGODB_URI || ('mongodb://db/' + process.env.NODE_ENV));
+    mongoose.connect(process.env.MONGODB_URI || ('mongodb://localhost/' + process.env.NODE_ENV));
 
     mongoose.connection.on('error', (err) => {
         console.log('MongoDB Connection Error: ' + err);
