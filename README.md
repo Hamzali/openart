@@ -9,13 +9,6 @@
 ### with view
 [![Build Status](http://jenkins.artizhub.com/job/openart/badge/icon)](http://jenkins.artizhub.com/job/openart/)
 
-[![Build Status](http://jenkins.artizhub.com/buildStatus/icon?job=openart)](http://jenkins.artizhub.com/job/openart/)
-
-### without view
-[![Build Status](http://jenkins.artizhub.com/job/openart/badge/icon)](http://jenkins.artizhub.com/job/openart)
-
-[![Build Status](http://jenkins.artizhub.com/buildStatus/icon?job=openart)](http://jenkins.artizhub.com/job/openart)
-
 An open source art community website.\
 **demo:** [openart.heroku.com](https://openart.heroku.com)
 
