@@ -5,12 +5,12 @@
   "description": "open source art api",
   "main": "index.js",
   "engines": {
-    "node": "7.8.0",
+    "node": "7.10.0",
     "npm": "4.5.0"
   },
   "scripts": {
     
-    "test": "export NODE_ENV=test && istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "test": "export NODE_ENV=test && ./node_modules/istanbul/lib/cli cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && ./node_modules/istanbul/lib/cli report clover",
     "start": "export NODE_ENV=production && pm2 start --attach processes.json",
     "dev": "export NODE_ENV=dev && nodemon index.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
