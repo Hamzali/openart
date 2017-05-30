@@ -1,0 +1,9 @@
+#!/bin/sh
+
+ssh app@artizhub.com <<EOF
+  cd ~/openart
+  git pull
+  npm install --production
+  pm2 restrart all
+  exit
+EOF
