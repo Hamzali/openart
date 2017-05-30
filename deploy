@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ssh app@artizhub.com <<EOF
+ssh -tt app@artizhub.com <<EOF
   cd ~/openart
   git pull
   npm install --production
