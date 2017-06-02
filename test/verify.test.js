@@ -1,6 +1,3 @@
-const bcrypt = require('bcrypt');
-
-
 describe('Verify account', function () {
     const newUser = {
         'name': 'mamut kollariyandan',
@@ -11,26 +8,21 @@ describe('Verify account', function () {
 
     beforeEach(function (done) {
         
-        bcrypt
-        .hash('gizli', 10)
-        .then((hash) => {
+        let newArtist = new Artist({
+            name: 'artiz',
+            nick: 'artizneararlabazarda',
+            email: 'artiz@arar.com',
+            password: 'pass',
+            createdAt: Number(Date.now())
+        });
 
-            let newArtist = new Artist({
-                name: 'artiz',
-                nick: 'artizneararlabazarda',
-                email: 'artiz@arar.com',
-                password: hash,
-                createdAt: Number(Date.now())
-            });
-
-            newArtist.save()
-            .then(() => {
-                done();
-            })
-            .catch(err => {
-                console.log(err);
-                done();
-            });
+        newArtist.save()
+        .then(() => {
+            done();
+        })
+        .catch(err => {
+            console.log(err);
+            done();
         });
         
     });
@@ -115,7 +107,7 @@ describe('Verify account', function () {
         .post('/signup')
         .send({
             'name': 'mamut kollariyandan',
-            'nick': 'yandankollu',
+            'nick': 'abou',
             'email': 'artiz@arar.com',
             'password': 'gizlimamut'
         })
