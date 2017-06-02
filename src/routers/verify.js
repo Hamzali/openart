@@ -15,7 +15,7 @@ module.exports = app => {
             res.redirect('/');
 
         } catch (err) {
-            console.log(err);
+            if (process.env.NODE_ENV == 'dev') console.log(err);
             res.send({ 'message': 'failed, verification token expired.' });
         }
         

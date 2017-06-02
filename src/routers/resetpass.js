@@ -33,13 +33,13 @@ module.exports = app => {
 
             res.render('respass-notify', { 'message': 'success,  reset password email sent.' });
         } catch (err) {
-            console.log(err);
+            if (process.env.NODE_ENV == 'dev') console.log(err);
 
             if (err.name === 'ValidationError') {
                 // if token already exists set token to null.
                 token = null;
             } else {
-                res.render('respass-req', { 'error': 'failed, no such user found.' });
+                res.status(400).render('respass-req', { 'error': 'failed, no such user found.' });
                 return;
             }
    

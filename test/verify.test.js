@@ -44,46 +44,46 @@ describe('Verify account', function () {
     // TODO: Learn to test or mock email.
     it('POST /signup should create an artist and GET /verify/:token should verify user', function (done) {
         done();
-        // chai.request(app)
-        // .post('/signup')
-        // .send(newUser)
-        // .end(function (error, res) {
-        //     res.should.have.status(200);
-        //     res.should.be.json;
+        chai.request(app)
+        .post('/signup')
+        .send(newUser)
+        .end(function (error, res) {
+            res.should.have.status(200);
+            res.should.be.json;
 
-        //     res.body.should.be.an('object');
-        //     res.body.should.have.property('message');
-        //     res.body.message.should.be.a('string');
-        //     res.body.message.should.equal('success, registered and verification email sent.');
+            res.body.should.be.an('object');
+            res.body.should.have.property('message');
+            res.body.message.should.be.a('string');
+            res.body.message.should.equal('success, registered and verification email sent.');
             
-        //     Verify.findOne({ artist: newUser.email })
-        //     .then(v => {
-        //         if (!v) throw new Error('no token');
-        //         chai.request(app)
-        //         .get('/verify/' + v.token)
-        //         .end(function (error, res) {
-        //             res.should.have.status(200);
-        //             res.should.be.html;
+            Verify.findOne({ artist: newUser.email })
+            .then(v => {
+                if (!v) throw new Error('no token');
+                chai.request(app)
+                .get('/verify/' + v.token)
+                .end(function (error, res) {
+                    res.should.have.status(200);
+                    res.should.be.html;
 
-        //             Artist.findOne({ email: newUser.email })
-        //             .then(artist => {
-        //                 artist.isVerified.should.equal(true);
-        //                 done();
-        //             })
-        //             .catch(err => {
-        //                 console.log(err);
-        //                 done();
-        //             });
+                    Artist.findOne({ email: newUser.email })
+                    .then(artist => {
+                        artist.isVerified.should.equal(true);
+                        done();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        done();
+                    });
                     
-        //         });
+                });
 
-        //     }).catch(err => {
-        //         console.log(err);
-        //         done();
-        //     });
+            }).catch(err => {
+                console.log(err);
+                done();
+            });
             
             
-        // });
+        });
         
     });
 
