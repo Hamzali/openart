@@ -13,7 +13,7 @@
     "start": "pm2 start --attach processes.json --env production",
     "dev": "export NODE_ENV=dev && nodemon index.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "heroku_start": "export NODE_ENV=production && node index.js"
+    "heroku_start": "npm install pm2 -g && export NODE_ENV=production && pm2 start --attach index.js"
   },
   "author": "hamzali",
   "license": "ISC",
